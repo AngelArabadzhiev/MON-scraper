@@ -24,8 +24,23 @@ def enter_username_password(username, password):
     time.sleep(1)
     driver.find_element(By.XPATH, "/html/body/header/nav/div[2]/div/div[2]/div/a[3]").click()
 
-
-name = input("Запиши твоят входящ номер: ")
-access = input("Запиши твоят код за достъп: ")
+name = input("Твоят входящ номер: ")
+access = input("Твоят код за достъп: ")
 enter_username_password(name, access)
+
+bulgarian_grade = driver.find_element(By.XPATH, "/html/body/div[5]/div/div/div[2]/table/tbody/tr[1]/td[3]")
+math_grade = driver.find_element(By.XPATH, "/html/body/div[5]/div/div/div[2]/table/tbody/tr[2]/td[3]")
+
+
+def waiting_for_update(value, check_interval):
+    initial_value = value()
+    while initial_value == value:
+        time.sleep(check_interval)
+        driver.refresh()
+    else:
+        print("something happened")
+
+
+waiting_for_update(bulgarian_grade, 10)
+waiting_for_update(math_grade, 10)
 
