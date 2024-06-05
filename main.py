@@ -1,5 +1,6 @@
 import selenium
 import time
+import tkinter as tk
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -24,13 +25,7 @@ def enter_username_password(username, password):
     driver.find_element(By.XPATH, "/html/body/header/nav/div[2]/div/div[2]/div/a[3]").click()
 
 
-def wait_for_new():
-    wait = WebDriverWait(driver, 10000000000)
-
-
 name = input("Запиши твоят входящ номер: ")
 access = input("Запиши твоят код за достъп: ")
 enter_username_password(name, access)
-wait_for_new()
-
 
