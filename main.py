@@ -1,16 +1,12 @@
-import selenium
+import schedule
 import time
-import tkinter as tk
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
 
 driver = webdriver.Firefox()
-driver.get("https://infopriem.mon.bg")
-time.sleep(1)
-driver.find_element(By.XPATH, "/html/body/header/nav/div[2]/div/div[2]/div/a[6]").click()
+driver.get("https://infopriem.mon.bg/login")
 
 
 def enter_username_password(username, password):
@@ -22,25 +18,39 @@ def enter_username_password(username, password):
     pswd.click()
     pswd.send_keys(str(password), Keys.ENTER)
     time.sleep(1)
-    driver.find_element(By.XPATH, "/html/body/header/nav/div[2]/div/div[2]/div/a[3]").click()
-
-name = input("Твоят входящ номер: ")
-access = input("Твоят код за достъп: ")
-enter_username_password(name, access)
-
-bulgarian_grade = driver.find_element(By.XPATH, "/html/body/div[5]/div/div/div[2]/table/tbody/tr[1]/td[3]")
-math_grade = driver.find_element(By.XPATH, "/html/body/div[5]/div/div/div[2]/table/tbody/tr[2]/td[3]")
+    driver.get("https://infopriem.mon.bg/student/marks")
 
 
-def waiting_for_update(value, check_interval):
-    initial_value = value()
-    while initial_value == value:
-        time.sleep(check_interval)
-        driver.refresh()
-    else:
-        print("something happened")
+def get_td():
+    table = driver.find_element(By.TAG_NAME, 'table')
+    rows = table.find_elements(By.TAG_NAME, 'tr')
+    table_elements = []
+    for row in rows:
+        cells = row.find_elements(By.TAG_NAME, 'td')
+        for cell in cells:
+            table_elements.append(cell.text)
+    table_elements.remove("10.06.2024 11:00")
+    table_elements.remove("12.06.2024 08:00")
+    print()
+    for i in range(len(table_elements)):
+        if i == 2 :
+            print()
+        print(table_elements[i])
 
 
-waiting_for_update(bulgarian_grade, 10)
-waiting_for_update(math_grade, 10)
+#name = input("Твоят входящ номер: ")
+#access = input("Твоят код за достъп: ")
+enter_username_password("1034455", "5595163ef5")
+
+
+def task():
+    driver.refresh()
+    get_td()
+
+
+schedule.every(30).seconds.do(task)
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+
 
